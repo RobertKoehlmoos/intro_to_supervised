@@ -39,6 +39,35 @@ ax.plot(range(1, 200, 10), accuracy_for_testing, marker='o', markersize=10, labe
 ax.plot(range(1, 200, 10), accuracy_for_training, marker='o', markersize=10, label="train")
 ax.set_title('Accuracy vs K value for training and testing sets of banknotes')
 ax.set_xlabel('K Value')
-ax.set_label('Accuracy')
+ax.set_ylabel('Accuracy')
+ax.legend()
+plt.show()
+
+sonar_data = pd.read_csv("./data_sets/sonar.csv", header=None)
+
+# Separating the dataset columns into the features and labels
+X = sonar_data.iloc[:, :-1]
+y = sonar_data.iloc[:, -1]
+print(X.head())
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=99)
+
+# Sonar data is already distributed between 0 and 1, so does not need to be normalized
+# The data is also similar for each feature, so normalization is also not required to balance features
+accuracy_for_training = []
+accuracy_for_testing = []
+
+# Calculating error for K values between 1 and 40
+for i in range(1, 20):
+    knn = KNeighborsClassifier(n_neighbors=i)
+    knn.fit(X_train, y_train)
+    accuracy_for_training.append(knn.score(X_train, y_train))
+    accuracy_for_testing.append(knn.score(X_test, y_test))
+
+fig, ax = plt.subplots()
+ax.plot(range(1, 20), accuracy_for_testing, marker='o', markersize=10, label="test")
+ax.plot(range(1, 20), accuracy_for_training, marker='o', markersize=10, label="train")
+ax.set_title('Accuracy vs K value for training and testing sonar data')
+ax.set_xlabel('K Value')
+ax.set_ylabel('Accuracy')
 ax.legend()
 plt.show()
